@@ -109,15 +109,15 @@ public class ClienteServiceTest {
 
     @Test
     void testEliminarClienteExistente() {
-        // Arrange
+       
         int idCliente = 1;
         when(clienteRepository.existsById(idCliente)).thenReturn(true);
         doNothing().when(clienteRepository).deleteById(idCliente);
 
-        // Act
+        
         String resultado = clienteService.eliminarPorId(idCliente);
 
-        // Assert
+       
         assertEquals("Cliente eliminado correctamente", resultado);
         verify(clienteRepository).existsById(idCliente);
         verify(clienteRepository).deleteById(idCliente);
@@ -125,14 +125,14 @@ public class ClienteServiceTest {
 
     @Test
     void testEliminarClienteMensajeError() {
-        // Arrange
+        
         int idCliente = 1;
         when(clienteRepository.existsById(idCliente)).thenReturn(false);
 
-        // Act
+        
         String resultado = clienteService.eliminarPorId(idCliente);
 
-        // Assert
+       
         assertEquals("No existe un cliente con el Id proporcionado", resultado);
         verify(clienteRepository).existsById(idCliente);
         verify(clienteRepository, never()).deleteById(idCliente);
@@ -141,15 +141,15 @@ public class ClienteServiceTest {
     
      @Test
     void testActualizarClienteExistente() {
-        // Arrange
+       
         int idCliente = 1;
         when(clienteRepository.findById(idCliente)).thenReturn(Optional.of(clienteEntity));
         when(clienteRepository.save(any(ClienteEntity.class))).thenReturn(clienteEntity);
 
-        // Act
+        
         String resultado = clienteService.actualizarCliente(idCliente, cliente);
 
-        // Assert
+       
         assertEquals("Cliente actualizado con éxito", resultado);
         verify(clienteRepository).findById(idCliente);
         verify(clienteRepository).save(clienteEntity);
@@ -157,14 +157,14 @@ public class ClienteServiceTest {
 
     @Test
     void testActualizarClienteNoExistente() {
-        // Arrange
+        
         int idCliente = 1;
         when(clienteRepository.findById(idCliente)).thenReturn(Optional.empty());
 
-        // Act
+        
         String resultado = clienteService.actualizarCliente(idCliente, cliente);
 
-        // Assert
+        
         assertEquals("No existe un cliente con el ID proporcionado", resultado);
         verify(clienteRepository).findById(idCliente);
         verify(clienteRepository, never()).save(any(ClienteEntity.class));
@@ -173,14 +173,14 @@ public class ClienteServiceTest {
 
     @Test
     void testBuscarClientePorID() {
-        // Arrange
+        
         int idCliente = 1;
         when(clienteRepository.findById(idCliente)).thenReturn(Optional.of(clienteEntity));
 
-        // Act
+       
         ClienteEntity resultado = clienteService.buscarClienteID(idCliente);
 
-        // Assert
+        
         assertNotNull(resultado);
         assertEquals(idCliente, resultado.getIdCliente());
         verify(clienteRepository).findById(idCliente);
@@ -188,13 +188,13 @@ public class ClienteServiceTest {
 
     @Test
     void testBuscarTodoslosClientes() {
-        // Arrange
+        
         when(clienteRepository.findAll()).thenReturn(List.of(clienteEntity));
 
-        // Act
+        
         List<ClienteEntity> resultado = clienteService.findAll();
 
-        // Assert
+        
         assertNotNull(resultado);
         assertFalse(resultado.isEmpty());
         assertEquals(1, resultado.size());
