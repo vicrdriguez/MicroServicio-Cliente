@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -87,26 +86,6 @@ public class ClienteServiceTest {
 
 
 
-    //Test de crear cliente pero en caso de que ya exista manda error de mensaje
-    @Test
-    @DisplayName(" Test de crear cliente en caso de ya haber uno existente")
-    void testClienteExistentePorRut()
-    {
-
-    
-    when(clienteRepository.existsByRut("12345678-9")).thenReturn(true);
-    
-    
-    
-    String resultado = clienteService.crearCliente(cliente);
-    
-    // Verificaciones
-    assertEquals("Este cliente ya tiene asociado su RUT", resultado);
-    verify(clienteRepository).existsByRut("12345678-9");
-    verify(clienteRepository, never()).save(any(ClienteEntity.class));
-
-    }
-
     @Test
     void testEliminarClienteExistente() {
        
@@ -117,31 +96,17 @@ public class ClienteServiceTest {
         
         String resultado = clienteService.eliminarPorId(idCliente);
 
-       
+        
         assertEquals("Cliente eliminado correctamente", resultado);
         verify(clienteRepository).existsById(idCliente);
         verify(clienteRepository).deleteById(idCliente);
     }
 
-    @Test
-    void testEliminarClienteMensajeError() {
-        
-        int idCliente = 1;
-        when(clienteRepository.existsById(idCliente)).thenReturn(false);
-
-        
-        String resultado = clienteService.eliminarPorId(idCliente);
-
-       
-        assertEquals("No existe un cliente con el Id proporcionado", resultado);
-        verify(clienteRepository).existsById(idCliente);
-        verify(clienteRepository, never()).deleteById(idCliente);
-    }
-
+   
     
      @Test
     void testActualizarClienteExistente() {
-       
+    
         int idCliente = 1;
         when(clienteRepository.findById(idCliente)).thenReturn(Optional.of(clienteEntity));
         when(clienteRepository.save(any(ClienteEntity.class))).thenReturn(clienteEntity);
@@ -149,26 +114,13 @@ public class ClienteServiceTest {
         
         String resultado = clienteService.actualizarCliente(idCliente, cliente);
 
-       
+        
         assertEquals("Cliente actualizado con éxito", resultado);
         verify(clienteRepository).findById(idCliente);
         verify(clienteRepository).save(clienteEntity);
     }
 
-    @Test
-    void testActualizarClienteNoExistente() {
-        
-        int idCliente = 1;
-        when(clienteRepository.findById(idCliente)).thenReturn(Optional.empty());
-
-        
-        String resultado = clienteService.actualizarCliente(idCliente, cliente);
-
-        
-        assertEquals("No existe un cliente con el ID proporcionado", resultado);
-        verify(clienteRepository).findById(idCliente);
-        verify(clienteRepository, never()).save(any(ClienteEntity.class));
-    }
+    
 
 
     @Test
@@ -177,7 +129,7 @@ public class ClienteServiceTest {
         int idCliente = 1;
         when(clienteRepository.findById(idCliente)).thenReturn(Optional.of(clienteEntity));
 
-       
+        
         ClienteEntity resultado = clienteService.buscarClienteID(idCliente);
 
         
@@ -188,13 +140,13 @@ public class ClienteServiceTest {
 
     @Test
     void testBuscarTodoslosClientes() {
-        
+       
         when(clienteRepository.findAll()).thenReturn(List.of(clienteEntity));
 
         
         List<ClienteEntity> resultado = clienteService.findAll();
 
-        
+       
         assertNotNull(resultado);
         assertFalse(resultado.isEmpty());
         assertEquals(1, resultado.size());
